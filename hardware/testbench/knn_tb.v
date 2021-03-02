@@ -29,17 +29,7 @@ module knn_tb;
 
       //uncomment to fail the test 
       //@(posedge clk) #1;
-      
-      $write("Current time: %d; Timer value %d\n", $time, KNN_VALUE);
-      #(1000*PER) @(posedge clk) #1 KNN_SAMPLE = 1;
-      @(posedge clk) #1 KNN_SAMPLE = 0;
-      $write("Current time: %d; Timer value %d\n", $time, KNN_VALUE);
-
-      if( KNN_VALUE == 1003) 
-        $display("Test passed");
-      else
-        $display("Test failed: expecting knn value 1003 but got %d", KNN_VALUE);
-      
+            
       $finish;
    end
    
