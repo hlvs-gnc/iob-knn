@@ -26,3 +26,16 @@ void knn_init( int base_address){
   knn_start();
 }
 
+void knn_set_x(int x){
+	IO_SET(base, KNN_X, x);
+}
+
+void knn_set_y(int y){
+	IO_SET(base, KNN_Y, y);
+}
+
+signed long int knn_get_dist(){
+
+	return (signed long int) IO_GET(base, KNN_DIST);
+}
+
