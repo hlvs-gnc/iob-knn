@@ -15,7 +15,8 @@ INCLUDE+=-I$(KNN_SW_DIR)
 HDR+=$(KNN_SW_DIR)/*.h $(KNN_SW_DIR)/KNNsw_reg.h
 
 #sources
-SRC+=$(KNN_SW_DIR)/*.c
+#SRC+=$(KNN_SW_DIR)/*.c
+SRC+=$(KNN_SW_DIR)/random.c $(KNN_SW_DIR)/knn.c
 
 $(KNN_SW_DIR)/KNNsw_reg.h: $(KNN_HW_INC_DIR)/KNNsw_reg.v
 	$(LIB_DIR)/software/mkregs.py $< SW
