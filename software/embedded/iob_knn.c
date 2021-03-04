@@ -38,4 +38,3 @@ signed long int knn_get_dist(){
 
 	return (signed long int) IO_GET(base, KNN_DIST);
 }
-
