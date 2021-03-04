@@ -40,23 +40,34 @@ int main() {
 	knn_start();
 	knn_reset();
 
-	signed long int x, y, dist = 0;
+	signed long int x1, y1, x2, y2;
+	signed long int dist=0;
+	signed long int a, b;
 
 	//32 bit coordinates
-	//
 
-	x = (10 << 16) | (15 & 0xFFFF);
-
-	y = (15 << 16) | (10 & 0xFFFF);
-
-//	uart_printf("(main-sw) x: %d y: %d\n", x, y);
-
-
-	knn_set_x(x);
-	knn_set_y(y);
+	//for(int i = 0; i < 5; i++){
+		x1 = rand() % 15;
+		y1 = rand() % 15;
+		x2 = rand() % 15;
+		y2 = rand() % 15;
 		
+		uart_printf("A coordinates - x: %d, y: %d\n", x1, y1);
+		uart_printf("B coordinates - x: %d, y: %d\n", x2, y2);
 
-	uart_printf("\n dist_hardware = %ld \n", knn_get_dist());
+		a = (x1 << 16) | (y1 & 0xFFFF);
+
+		b = (x2 << 16) | (y2 & 0xFFFF);
+	
+		//uart_printf("(main-sw) a: %d b: %d\n", x, y);
+
+		knn_set_x(a);
+		knn_set_y(b);
+		
+		dist = knn_get_dist();
+
+		uart_printf("\n dist_hardware = %d \n\n", dist);
+	//}
 
 	knn_stop();
 	return 0;

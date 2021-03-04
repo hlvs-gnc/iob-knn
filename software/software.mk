@@ -12,7 +12,7 @@ endif
 INCLUDE+=-I$(KNN_SW_DIR)
 
 #headers
-HDR+=$(KNN_SW_DIR)/*.h $(KNN_SW_DIR)/KNNsw_reg.h
+HDR+=$(KNN_SW_DIR)/*.h #$(KNN_SW_DIR)/KNNsw_reg.h
 
 #sources
 #SRC+=$(KNN_SW_DIR)/*.c
