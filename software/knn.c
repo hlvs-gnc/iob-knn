@@ -6,6 +6,7 @@
 #include "random.h" //random generator for bare metal
 #include "stdlib.h"
 #include "stdint.h"
+#include "printf.h"
 
 //uncomment to use rand from C lib 
 //#define cmwc_rand rand
@@ -52,21 +53,20 @@ int main() {
 		x2 = rand() % 15;
 		y2 = rand() % 15;
 		
-		uart_printf("A coordinates - x: %d, y: %d\n", x1, y1);
-		uart_printf("B coordinates - x: %d, y: %d\n", x2, y2);
+		printf("A coordinates - x: %d, y: %d\n", x1, y1);
+		printf("B coordinates - x: %d, y: %d\n", x2, y2);
 
 		a = (x1 << 16) | (y1 & 0xFFFF);
 
 		b = (x2 << 16) | (y2 & 0xFFFF);
 	
-		//uart_printf("(main-sw) a: %d b: %d\n", x, y);
-
+		
 		knn_set_x(a);
 		knn_set_y(b);
 		
 		dist = knn_get_dist();
 
-		uart_printf("\n dist_hardware = %d \n\n", dist);
+		printf("\n dist_hardware = %d \n\n", dist);
 	//}
 
 	knn_stop();
