@@ -16,14 +16,9 @@ module knn_core
     `OUTPUT(distance, DATA_W)
     );
     
-   `SIGNAL_SIGNED(dist_out, 32)
    `SIGNAL_SIGNED(dist_out_h, 16)
    `SIGNAL_SIGNED(dist_out_l, 16)
-   `SIGNAL_SIGNED(reg_dist, 32)
    `SIGNAL_SIGNED(dist_res, 32)
-
-   `REG_RE(clk, rst_acc, 0, en, dist_res, reg_dist)
-   `ACC_RE(clk, rst_acc, 0, en_acc, dist_out, dist_res)
 
    `COMB begin
 		
