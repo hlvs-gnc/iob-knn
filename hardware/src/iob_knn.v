@@ -20,12 +20,14 @@ module iob_knn
 
     //combined hard/soft reset 
    `SIGNAL(rst_int, 1)
-   `COMB rst_int = rst;
+   `COMB rst_int = rst | KNN_RESET;
 
    //write signal
    `SIGNAL(write, 1) 
    `COMB write = | wstrb;
-    
+  
+   `SIGNAL_OUT(en_acc, 1)
+   `SIGNAL_OUT(rst_acc, 1)
    //
    //BLOCK 64-bit time counter & Free-running 64-bit counter with enable and soft reset capabilities
    //
@@ -33,8 +35,10 @@ module iob_knn
    knn_core knn0
      (
       .clk(clk),
-      .rst(KNN_RESET),
+      .rst(rst_int),
+      .rst_acc(rst_acc),
       .en(KNN_ENABLE & write & valid),
+      .en_acc(en_acc),
       .A(KNN_X),
       .B(KNN_Y),
       .distance(KNN_DIST)

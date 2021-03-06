@@ -31,6 +31,18 @@
 //Data structures
 //
 
+//labeled dataset
+struct datum {
+  short x;
+  short y;
+  unsigned char label;
+} data[N], x[M];
+
+//neighbor info
+struct neighbor {
+  unsigned int idx; //index in dataset array
+  unsigned int dist; //distance to test point
+} neighbor[K];
 
 int main() {
 
@@ -47,7 +59,7 @@ int main() {
 
 	//32 bit coordinates
 
-	//for(int i = 0; i < 5; i++){
+	for(int i = 0; i < 5; i++){
 		x1 = rand() % 15;
 		y1 = rand() % 15;
 		x2 = rand() % 15;
@@ -60,14 +72,13 @@ int main() {
 
 		b = (x2 << 16) | (y2 & 0xFFFF);
 	
-		
 		knn_set_x(a);
 		knn_set_y(b);
 		
 		dist = knn_get_dist();
 
-		printf("\n dist_hardware = %d \n\n", dist);
-	//}
+		printf("\ndist_hardware = %d \n\n", dist);
+	}
 
 	knn_stop();
 }
