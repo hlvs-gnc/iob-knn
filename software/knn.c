@@ -70,6 +70,4 @@ int main() {
 	//}
 
 	knn_stop();
-	return 0;
-  
 }

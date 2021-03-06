@@ -18,12 +18,12 @@ VHDR+=$(KNN_HW_INC_DIR)/KNNsw_reg_gen.v
 KNN_SRC_DIR:=$(KNN_DIR)/hardware/src
 VSRC+=$(wildcard $(KNN_HW_DIR)/src/*.v)
 
-$(KNN_HW_INC_DIR)/KNNsw_reg_gen.v: $(KNN_HW_INC_DIR)/KNNsw_reg.v
+$(KNN_HW_DIR)/include/KNNsw_reg_gen.v $(KNN_HW_DIR)/include/KNNsw_reg.vh: $(KNN_HW_DIR)/include/KNNsw_reg.v
 	$(LIB_DIR)/software/mkregs.py $< HW
 	mv KNNsw_reg_gen.v $(KNN_HW_INC_DIR)
-	mv KNNsw_reg_w.vh $(KNN_HW_INC_DIR)
+	mv KNNsw_reg.vh $(KNN_HW_INC_DIR)
 
 knn_clean_hw:
-	@rm -rf $(KNN_HW_INC_DIR)/sw_reg_gen.v $(KNN_HW_INC_DIR)/sw_reg_w.vh tmp $(KNN_HW_DIR)/fpga/vivado/XCKU $(KNN_HW_DIR)/fpga/quartus/CYCLONEV-GT
+	@rm -rf $(KNN_HW_INC_DIR)/KNNsw_reg_gen.v $(KNN_HW_INC_DIR)/KNNsw_reg.vh tmp $(KNN_HW_DIR)/fpga/vivado/XCKU $(KNN_HW_DIR)/fpga/quartus/CYCLONEV-GT
 
 .PHONY: knn_clean_hw
