@@ -27,8 +27,7 @@ module knn_core
 
 	dist_res = dist_out_h**2 + dist_out_l**2;
 
-	//$display("\t### (knn_core) distance: %d ###\n", dist_res);
-    end
+	end
 
    `SIGNAL2OUT(distance, dist_res)
 

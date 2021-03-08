@@ -10,7 +10,7 @@ KNN_SUBMODULES_DIR:=$(KNN_DIR)/submodules
 
 #submodules
 KNN_SUBMODULES:=INTERCON LIB TEX
-$(foreach p, $(KNN_SUBMODULES), $(eval $p_DIR:=$(KNN_DIR)/submodules/$p))
+$(foreach p, $(KNN_SUBMODULES), $(eval $p_DIR:=$(KNN_SUBMODULES_DIR)/$p))
 
 REMOTE_ROOT_DIR ?= sandbox/iob-soc/submodules/KNN
 
