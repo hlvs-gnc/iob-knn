@@ -60,38 +60,47 @@ int main() {
   //read current timer count, compute elapsed time
   //elapsed  = timer_get_count();
   //elapsedu = timer_time_us();
+  
+  knn_init(KNN_BASE);
+  knn_reset();
 
-	knn_init(KNN_BASE);
-	knn_start();
-	knn_reset();
+  signed long int x1, y1, x2, y2;
+  signed long int dist=0;
+  signed long int a, b;
+  char label[4] = {'A', 'B', 'C', 'D'};
+  int c;
+  //32 bit coordinates
 
-	signed long int x1, y1, x2, y2;
-	signed long int dist=0;
-	signed long int a, b;
+  for(int i = 0; i < 4; i++){
 
-	//32 bit coordinates
+	x1 = rand() % 15;
+	y1 = rand() % 15;
 
-	for(int i = 0; i < 5; i++){
-		x1 = rand() % 15;
-		y1 = rand() % 15;
-		x2 = rand() % 15;
-		y2 = rand() % 15;
-		
-		printf("A coordinates - x: %d, y: %d\n", x1, y1);
-		printf("B coordinates - x: %d, y: %d\n", x2, y2);
+	a = (x1 << 16) | (y1 & 0xFFFF);
+	//printf("##### A coordinates - x: %d, y: %d #####\n\n", x1, y1);
 
-		a = (x1 << 16) | (y1 & 0xFFFF);
+	knn_set_test(a);
+
+	for(int j = 0; j < 4; j++){
+			
+		c = rand()%5;
+
+  		x2 = rand() % 15;
+  		y2 = rand() % 15;
+
+		//printf("B coordinates - x: %d, y: %d\n", x2, y2);
+
 		b = (x2 << 16) | (y2 & 0xFFFF);
-	
-		knn_set_x(a);
-		knn_set_y(b);
-		
-		dist = knn_get_dist();
 
-		printf("\ndist_hardware = %d \n\n", dist);
+		knn_set_train(b, label[c]);
+
+		knn_start();
 	}
 
 	knn_stop();
+	printf("\n");
+
+  }
 /*
 #ifdef DEBUG
   printf("\n\n\nDATASET\n");

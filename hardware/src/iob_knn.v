@@ -26,8 +26,8 @@ module iob_knn
    `SIGNAL(write, 1) 
    `COMB write = | wstrb;
   
-   `SIGNAL_OUT(en_acc, 1)
-   `SIGNAL_OUT(rst_acc, 1)
+   `SIGNAL_OUT(en_dist, 1)
+   `SIGNAL_OUT(rst_dist, 1)
    //
    //BLOCK 64-bit time counter & Free-running 64-bit counter with enable and soft reset capabilities
    //
@@ -36,11 +36,12 @@ module iob_knn
      (
       .clk(clk),
       .rst(rst_int),
-      .rst_acc(rst_acc),
+      .rst_dist(rst_dist),
       .en(KNN_ENABLE & write & valid),
-      .en_acc(en_acc),
+      .en_dist(KNN_ENABLE),
       .A(KNN_X),
       .B(KNN_Y),
+      .label(KNN_LABEL),
       .distance(KNN_DIST)
       );
    
@@ -48,7 +49,7 @@ module iob_knn
    //ready signal   
    `SIGNAL(ready_knn, 1)
    `REG_AR(clk, rst, 0, ready_knn, valid)
-
+   
    `SIGNAL2OUT(ready, ready_knn)
    
    //rdata signal

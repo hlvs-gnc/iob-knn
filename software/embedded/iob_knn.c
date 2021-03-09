@@ -23,18 +23,14 @@ void knn_init( int base_address){
   //capture base address for good
   base = base_address;
   knn_reset();
-  knn_start();
 }
 
-void knn_set_x(int x){
-	IO_SET(base, KNN_X, x);
+void knn_set_test(int coordinates){
+	IO_SET(base, KNN_X, coordinates);
 }
 
-void knn_set_y(int y){
-	IO_SET(base, KNN_Y, y);
+void knn_set_train(int coordinates, char label){
+	IO_SET(base, KNN_LABEL, label);
+	IO_SET(base, KNN_Y, coordinates);
 }
 
-signed long int knn_get_dist(){
-
-	return (signed long int) IO_GET(base, KNN_DIST);
-}
