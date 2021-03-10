@@ -71,24 +71,25 @@ int main() {
   int c;
   //32 bit coordinates
 
-  for(int i = 0; i < 4; i++){
+//  for(int i = 0; i < 4; i++){
 
 	x1 = rand() % 15;
 	y1 = rand() % 15;
 
 	a = (x1 << 16) | (y1 & 0xFFFF);
-	//printf("##### A coordinates - x: %d, y: %d #####\n\n", x1, y1);
+	printf("##### A coordinates - x: %d, y: %d #####\n\n", x1, y1);
 
 	knn_set_test(a);
 
-	for(int j = 0; j < 4; j++){
-			
+	for(int j = 0; j < 8; j++){
+		knn_stop();
+
 		c = rand()%5;
 
   		x2 = rand() % 15;
   		y2 = rand() % 15;
 
-		//printf("B coordinates - x: %d, y: %d\n", x2, y2);
+		printf("B coordinates - x: %d, y: %d\n", x2, y2);
 
 		b = (x2 << 16) | (y2 & 0xFFFF);
 
@@ -97,10 +98,9 @@ int main() {
 		knn_start();
 	}
 
-	knn_stop();
 	printf("\n");
 
-  }
+ // }
 /*
 #ifdef DEBUG
   printf("\n\n\nDATASET\n");
