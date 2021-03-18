@@ -5,5 +5,4 @@
 #define KNN_ENABLE 1
 #define KNN_X 2
 #define KNN_Y 3
-#define KNN_LABEL 4
-#define KNN_DIST 5
+#define KNN_DIST 4

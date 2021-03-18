@@ -89,7 +89,7 @@ int main() {
   		x2 = rand() % 15;
   		y2 = rand() % 15;
 
-		printf("B coordinates - x: %d, y: %d\n", x2, y2);
+		printf("B coordinates - x: %d, y: %d\n\n", x2, y2);
 
 		b = (x2 << 16) | (y2 & 0xFFFF);
 

@@ -20,17 +20,14 @@ void knn_stop() {
 
 void knn_init( int base_address){
 
-  //capture base address for good
   base = base_address;
   knn_reset();
 }
 
-void knn_set_test(int coordinates){
-	IO_SET(base, KNN_X, coordinates);
-}
 
-void knn_set_train(int coordinates, char label){
-	IO_SET(base, KNN_LABEL, label);
-	IO_SET(base, KNN_Y, coordinates);
-}
+unsigned int knn_get_dist(int coordinates_x, int coordinates_y){
 
+	IO_SET(base, KNN_X, coordinates_x);
+	IO_SET(base, KNN_Y, coordinates_y);
+	return IO_GET(base, KNN_DIST);
+}

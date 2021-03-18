@@ -4,23 +4,25 @@
 #include "iob_timer.h"
 #include "iob_knn.h"
 #include "random.h" //random generator for bare metal
+#include "printf.h"
 
 //uncomment to use rand from C lib 
 //#define cmwc_rand rand
 
-#ifdef DEBUG //type make DEBUG=1 to print debug info
+//#ifdef DEBUG //type make DEBUG=1 to print debug info
 #define S 12  //random seed
 #define N 10  //data set size
 #define K 4   //number of neighbours (K)
 #define C 4   //number data classes
 #define M 4   //number samples to be classified
-#else
+/*#else
 #define S 12   
 #define N 100000
 #define K 10  
 #define C 4  
-#define M 100 
-#endif
+#define M 100
+#endif*/
+
 
 #define INFINITE ~0
 
@@ -72,10 +74,11 @@ int main() {
 
   //init uart and timer
   uart_init(UART_BASE, FREQ/BAUD);
-  uart_printf("\nInit timer\n");
-  uart_txwait();
+  //printf("\nInit timer\n");
+  //uart_txwait();
 
   timer_init(TIMER_BASE);
+  
   //read current timer count, compute elapsed time
   //elapsed  = timer_get_count();
   //elapsedu = timer_time_us();
@@ -89,7 +92,7 @@ int main() {
 
   //init dataset
   for (int i=0; i<N; i++) {
-
+       
     //init coordinates
     data[i].x = (short) cmwc_rand();
     data[i].y = (short) cmwc_rand();
@@ -97,12 +100,14 @@ int main() {
     //init label
     data[i].label = (unsigned char) (cmwc_rand()%C);
   }
+  
+  //printf("Init dataset");
 
 #ifdef DEBUG
-  uart_printf("\n\n\nDATASET\n");
-  uart_printf("Idx \tX \tY \tLabel\n");
+  printf("\n\n\nDATASET\n");
+  printf("Idx \tX \tY \tLabel\n");
   for (int i=0; i<N; i++)
-    uart_printf("%d \t%d \t%d \t%d\n", i, data[i].x,  data[i].y, data[i].label);
+    printf("%d \t%d \t%d \t%d\n", i, data[i].x,  data[i].y, data[i].label);
 #endif
   
   //init test points
@@ -112,11 +117,13 @@ int main() {
     //x[k].label will be calculated by the algorithm
   }
 
+  //printf("Init test points\n");
+
 #ifdef DEBUG
-  uart_printf("\n\nTEST POINTS\n");
-  uart_printf("Idx \tX \tY\n");
+  printf("\n\nTEST POINTS\n");
+  printf("Idx \tX \tY\n");
   for (int k=0; k<M; k++)
-    uart_printf("%d \t%d \t%d\n", k, x[k].x, x[k].y);
+    printf("%d \t%d \t%d\n", k, x[k].x, x[k].y);
 #endif
   
   //
@@ -124,24 +131,32 @@ int main() {
   //
 
   //start knn here
-  
+  knn_init(KNN_BASE);
+  //printf("Init KNN\n"); 
+  knn_start();
+
   for (int k=0; k<M; k++) { //for all test points
   //compute distances to dataset points
 
 #ifdef DEBUG
-    uart_printf("\n\nProcessing x[%d]:\n", k);
+    printf("\n\nProcessing x[%d]:\n", k);
 #endif
 
     //init all k neighbors infinite distance
     for (int j=0; j<K; j++)
       neighbor[j].dist = INFINITE;
 
+    //printf("Init k-neighbours distance\n");
+
 #ifdef DEBUG
-    uart_printf("Datum \tX \tY \tLabel \tDistance\n");
+    printf("Datum \tX \tY \tLabel \tDistance\n");
 #endif
     for (int i=0; i<N; i++) { //for all dataset points
       //compute distance to x[k]
-      unsigned int d = sq_dist(x[k], data[i]);
+      //unsigned int d = sq_dist(x[k], data[i]);
+     
+      
+      unsigned int d = knn_get_dist((x[k].x << 16) | (x[k].y & 0xFFFF), (data[i].x << 16) | (data[i].y & 0xFFFF));
 
       //insert in ordered list
       for (int j=0; j<K; j++)
@@ -152,10 +167,12 @@ int main() {
 
 #ifdef DEBUG
       //dataset
-      uart_printf("%d \t%d \t%d \t%d \t%d\n", i, data[i].x, data[i].y, data[i].label, d);
+      printf("%d \t%d \t%d \t%d \t%d\n", i, data[i].x, data[i].y, data[i].label, d);
 #endif
 
     }
+    knn_stop();
+    //printf("Distances check\n");
 
     
     //classify test point
@@ -173,19 +190,21 @@ int main() {
       }
     }
 
+    //printf("Voting check\n");
+
     x[k].label = best_voted;
 
     votes_acc[best_voted]++;
     
 #ifdef DEBUG
-    uart_printf("\n\nNEIGHBORS of x[%d]=(%d, %d):\n", k, x[k].x, x[k].y);
-    uart_printf("K \tIdx \tX \tY \tDist \t\tLabel\n");
+    printf("\n\nNEIGHBORS of x[%d]=(%d, %d):\n", k, x[k].x, x[k].y);
+    printf("K \tIdx \tX \tY \tDist \t\tLabel\n");
     for (int j=0; j<K; j++)
-      uart_printf("%d \t%d \t%d \t%d \t%d \t%d\n", j+1, neighbor[j].idx, data[neighbor[j].idx].x,  data[neighbor[j].idx].y, neighbor[j].dist,  data[neighbor[j].idx].label);
+      printf("%d \t%d \t%d \t%d \t%d \t%d\n", j+1, neighbor[j].idx, data[neighbor[j].idx].x,  data[neighbor[j].idx].y, neighbor[j].dist,  data[neighbor[j].idx].label);
     
-    uart_printf("\n\nCLASSIFICATION of x[%d]:\n", k);
-    uart_printf("X \tY \tLabel\n");
-    uart_printf("%d \t%d \t%d\n\n\n", x[k].x, x[k].y, x[k].label);
+    printf("\n\nCLASSIFICATION of x[%d]:\n", k);
+    printf("X \tY \tLabel\n");
+    printf("%d \t%d \t%d\n\n\n", x[k].x, x[k].y, x[k].label);
 
 #endif
 
@@ -194,13 +213,13 @@ int main() {
   //stop knn here
   //read current timer count, compute elapsed time
   elapsedu = timer_time_us(TIMER_BASE);
-  uart_printf("\nExecution time: %dus @%dMHz\n\n", elapsedu, FREQ/1000000);
+  printf("\nExecution time: %dus @%dMHz\n\n", elapsedu, FREQ/1000000);
 
   
   //print classification distribution to check for statistical bias
   for (int l=0; l<C; l++)
-    uart_printf("%d ", votes_acc[l]);
-  uart_printf("\n");
+    printf("%d ", votes_acc[l]);
+  printf("\n");
   
 }
 
