@@ -12,32 +12,42 @@ module knn_list
     `INPUT(clk, 1),
     `INPUT(rst, 1),
     `INPUT(en_list, 1),
+    `INPUT(prior_nn_dist, 32),
+    `INPUT(prior_nn_label, 8),
     `INPUT(dist_entry, DATA_W),
     `INPUT(label_entry, LABEL_BITS),
-    `OUTPUT(nn_out, NBR_KNN*LABEL_BITS)
+    `OUTPUT(nn_dist, DATA_W),
+    `OUTPUT(nn_label, LABEL_BITS)
    );
 
-    reg [DATA_W:0] dist_out [NBR_KNN:0];
+    `SIGNAL(new_reg_val, 1)
+    `SIGNAL(dist_in, DATA_W)
+    `SIGNAL(label_in, LABEL_BITS)
+    `SIGNAL(dist_out, DATA_W)
+    `SIGNAL(label_out, LABEL_BITS)
 
-    integer i = 0;
-/*
     `COMB begin
+  
+	        if (dist_entry < dist_out) //compare distance value with the k-neighbours register
+        	
+			new_reg_val = 1'b1;
+		else
+			new_reg_val = 1'b0;
+	
+		if (new_reg_val == 1)
 
-        for (i = 0; i < NBR_KNN; i=i+1) begin
-            
-                if (i < 8 & en_list) begin //compare distance value with the k-neighbours array
-                
-                dist_out[i] = dist_entry;
-                i = i + 1; 
-                $display("dist_out[%d]: %d", i-1, dist_out[i-1]);
-            end
-        end
+			dist_in = dist_entry;
+			label_in = label_entry;
+
+		$display("dist_in = %d, label_in = %d", dist_in, label_in);
+    end
+
+    `REG_ARE(clk, rst, 1, en_list & new_reg_val, label_out, label_entry)
+    `REG_ARE(clk, rst, 1, en_list & new_reg_val, dist_out, dist_entry)
+	
+    `SIGNAL2OUT(nn_dist, dist_out)
+    `SIGNAL2OUT(nn_label, label_out)
  
-     end
-
-//    `SIGNAL2OUT(nn_out, dist_out)
-
-  */
 endmodule
 
 //TODO: control block to implement signaling for the finite state machine

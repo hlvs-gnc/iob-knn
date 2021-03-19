@@ -24,6 +24,10 @@ void knn_init( int base_address){
   knn_reset();
 }
 
+void knn_set_label(char label){
+
+	IO_SET(base, KNN_LABEL, label);
+}
 
 unsigned int knn_get_dist(int coordinates_x, int coordinates_y){
 

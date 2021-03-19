@@ -39,8 +39,10 @@ module iob_knn
       .rst_dist(rst_dist),
       .en(KNN_ENABLE & write & valid),
       .en_dist(KNN_ENABLE),
+      .valid(valid),
       .A(KNN_X),
       .B(KNN_Y),
+      .label_qualifier(KNN_LABEL),
       .distance(KNN_DIST)
       );
  
