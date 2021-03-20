@@ -2,7 +2,6 @@ include $(KNN_DIR)/core.mk
 
 #define
 DEFINE+=$(defmacro) DATA_W=32
-DEFINE+=$(defmacro) NBR_LABELS=4
 DEFINE+=$(defmacro) NBR_KNN=4
 
 #include

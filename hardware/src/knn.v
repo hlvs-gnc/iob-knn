@@ -4,11 +4,9 @@
 module knn_core
    #(
      parameter DATA_W = 32,
-     parameter NBR_LABELS = 4,
      parameter NBR_KNN = 4,
      parameter NBR_TESTP = 4,
-     parameter NBR_DATAP = 10,
-     parameter LABEL_BITS = 8
+     parameter NBR_DATAP = 10
    )
    (   
     `INPUT(clk, 1),

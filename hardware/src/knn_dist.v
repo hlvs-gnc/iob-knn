@@ -4,11 +4,9 @@
 module knn_dist
    #(
      parameter DATA_W = 32,
-     parameter NBR_LABELS = 4,
      parameter NBR_KNN = 4,
      parameter NBR_TESTP = 4,
-     parameter NBR_DATAP = 10,
-     parameter LABEL_BITS = 8
+     parameter NBR_DATAP = 10
    )
    (
     `INPUT(clk, 1),
@@ -27,7 +25,6 @@ module knn_dist
    `SIGNAL_SIGNED(dist_res, 32)
 
    `SIGNAL(knn_dist_out, DATA_W*NBR_KNN)
-   `SIGNAL(knn_label_out, LABEL_BITS*NBR_KNN)
 
    integer n = 0;
 
@@ -44,3 +41,4 @@ module knn_dist
 
     `SIGNAL2OUT(distance, dist_res) //distance must go to the list block in order to collect the cluster of the K-neirest neighbours relative to the test point
 
+endmodule
