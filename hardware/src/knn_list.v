@@ -51,5 +51,3 @@ module knn_list
 endmodule
 
 //TODO: control block to implement signaling for the finite state machine
-
-

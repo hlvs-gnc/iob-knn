@@ -26,24 +26,19 @@ module iob_knn
    `SIGNAL(write, 1) 
    `COMB write = | wstrb;
   
-   `SIGNAL_OUT(rst_dist, 1)
    //
    //BLOCK 64-bit time counter & Free-running 64-bit counter with enable and soft reset capabilities
    //
-   `SIGNAL_OUT(distance, DATA_W)
-   
+ 
    knn_core knn0
      (
       .clk(clk),
       .rst(rst_int),
-      .rst_dist(rst_dist),
       .en(KNN_ENABLE & write & valid),
-      .en_dist(KNN_ENABLE),
       .valid(valid),
       .A(KNN_X),
       .B(KNN_Y),
-      .label_qualifier(KNN_LABEL),
-      .distance(KNN_DIST)
+      .knn_info(KNN_INFO)
       );
  
    
