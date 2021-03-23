@@ -10,35 +10,49 @@ module knn_list
    (
     `INPUT(clk, 1),
     `INPUT(rst, 1),
-    `INPUT(en_list, 1),
-    `INPUT(prior_nn_dist, 32),
+    `INPUT(valid, 1),
+    `INPUT(ID, 2),
     `INPUT(dist_entry, DATA_W),
-    `OUTPUT(nn_dist, DATA_W)
+    `OUTPUT(knn_info, 2)
    );
 
-    `SIGNAL(new_reg_val, 1)
-    `SIGNAL(dist_in, DATA_W)
-    `SIGNAL(dist_out, DATA_W)
+    `SIGNAL(id_out, 8)
+    `SIGNAL(id_counter, 2)
+    `SIGNAL(set_value, 1)
 
-    `COMB begin
-  
-	        if (dist_entry < dist_out) //compare distance value with the k-neighbours register
-        	
-			new_reg_val = 1'b1;
-		else
-			new_reg_val = 1'b0;
+    reg new_reg_val [0:NBR_KNN-1];
+
+    reg [DATA_W:0] dist_vec [0:NBR_KNN-1];
+    
+    integer i;
+
+    `SIGNAL2OUT(knn_info, id_out)
+   
+
+    `REG_E(clk, valid, dist_vec[id_counter], 32'Hffffffff)
+
+
+    `COUNTER_RE(clk, rst, valid, id_counter)
+
+    `COMB begin	
 	
-		if (new_reg_val == 1)
+	$display("counter: %d\n", id_counter);	
+   	
+	for(i = 0; i < NBR_KNN; i = i + 1) begin 
 
-			dist_in = dist_entry;
+	    if (dist_entry < dist_vec[i]) begin //compare distance value with the knn register	
+	
+			dist_vec[i] = dist_entry;
 
-		$display("dist_in = %d", dist_in);
+			$display("dist_vec[0]: %d\n", dist_vec[0]);
+			$display("dist_vec[1]: %d\n", dist_vec[1]);
+			$display("dist_vec[2]: %d\n", dist_vec[2]);
+			$display("dist_vec[3]: %d\n", dist_vec[3]);
+
+	    end
+		
+	end
+    
     end
 
-    `REG_ARE(clk, rst, 1, en_list & new_reg_val, dist_out, dist_entry)
-	
-    `SIGNAL2OUT(nn_dist, dist_out)
- 
-endmodule
-
-//TODO: control block to implement signaling for the finite state machine
+endmodule //knn_list

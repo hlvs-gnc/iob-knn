@@ -36,12 +36,15 @@ module iob_knn
       .rst(rst_int),
       .en(KNN_ENABLE & write & valid),
       .valid(valid),
+      .ready(KNN_READY),
       .A(KNN_X),
       .B(KNN_Y),
-      .knn_info(KNN_INFO)
+      .knn_info(KNN_ID)
       );
  
-   
+   `SIGNAL(knn_id_out, 2)
+
+
    //ready signal   
    `SIGNAL(ready_knn, 1)
    `REG_AR(clk, rst, 0, ready_knn, valid)

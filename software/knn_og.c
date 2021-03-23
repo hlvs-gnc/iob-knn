@@ -9,46 +9,16 @@
 //uncomment to use rand from C lib 
 //#define cmwc_rand rand
 
-//#ifdef DEBUG //type make DEBUG=1 to print debug info
-#define S 12  //random seed
-#define N 10  //data set size
-#define K 4   //number of neighbours (K)
-#define C 4   //number data classes
-#define M 4 //4   //number samples to be classified
-/*#else
-#define S 12   
-#define N 100000
-#define K 10  
-#define C 4  
-#define M 100
-#endif*/
+datum data[N], x[M];
 
-
-#define INFINITE ~0
-
-//
-//Data structures
-//
-
-//labeled dataset
-struct datum {
-  short x;
-  short y;
-  unsigned char label;
-} data[N], x[M];
-
-//neighbor info
-struct neighbor {
-  unsigned int idx; //index in dataset array
-  unsigned int dist; //distance to test point
-} neighbor[K];
+neighbor knn_list[K]; 
 
 //
 //Functions
 //
 
 //square distance between 2 points a and b
-unsigned int sq_dist( struct datum a, struct datum b) {
+unsigned int sq_dist(datum a, datum b) {
   short X = a.x-b.x;
   unsigned int X2=X*X;
   short Y = a.y-b.y;
@@ -57,14 +27,13 @@ unsigned int sq_dist( struct datum a, struct datum b) {
 }
 
 //insert element in ordered array of neighbours
-void insert (struct neighbor element, unsigned int position) {
+void insert (neighbor element, unsigned int position) {
   for (int j=K-1; j>position; j--)
-    neighbor[j] = neighbor[j-1];
+    knn_list[j] = knn_list[j-1];
 
-  neighbor[position] = element;
+  knn_list[position] = element;
 
 }
-
 
 ///////////////////////////////////////////////////////////////////
 int main() {
@@ -132,7 +101,7 @@ int main() {
 
   //start knn here
   knn_init(KNN_BASE);
-  //printf("Init KNN\n"); 
+  printf("Init KNN\n"); 
   knn_start();
 
   for (int k=0; k<M; k++) { //for all test points
@@ -141,10 +110,12 @@ int main() {
 #ifdef DEBUG
     printf("\n\nProcessing x[%d]:\n", k);
 #endif
+     
+    knn_set_testp((x[k].x << 16) | (x[k].y & 0xFFFF));
 
     //init all k neighbors infinite distance
-    for (int j=0; j<K; j++)
-      neighbor[j].dist = INFINITE;
+  //  for (int j=0; j<K; j++)
+  //    knn_list[j].dist = INFINITE;
 
     //printf("Init k-neighbours distance\n");
 
@@ -153,17 +124,18 @@ int main() {
 #endif
     for (int i=0; i<N; i++) { //for all dataset points
       //compute distance to x[k]
-      //unsigned int d = sq_dist(x[k], data[i]);
-     
+      // unsigned int d = sq_dist(x[k], data[i]);
+       
+      // unsigned int d = knn_get_dist((x[k].x << 16) | (x[k].y & 0xFFFF), (data[i].x << 16) | (data[i].y & 0xFFFF));
+      knn_set_datap((data[i].x << 16) | (data[i].y & 0xFFFF));
       
-      unsigned int d = knn_get_dist((x[k].x << 16) | (x[k].y & 0xFFFF), (data[i].x << 16) | (data[i].y & 0xFFFF));
-
       //insert in ordered list
-      for (int j=0; j<K; j++)
-        if ( d < neighbor[j].dist ) {
-          insert( (struct neighbor){i,d}, j);
+      /*for (int j=0; j<K; j++)
+        if ( d < knn_list[j].dist ) {
+          insert( (neighbor){i,d}, j);
           break;
         }
+      */
 
 #ifdef DEBUG
       //dataset
@@ -171,7 +143,9 @@ int main() {
 #endif
 
     }
-    knn_stop();
+    knn_get_list(knn_list);
+
+    //knn_stop();
     //printf("Distances check\n");
 
     
@@ -184,8 +158,8 @@ int main() {
 
     //make neighbours vote
     for (int j=0; j<K; j++) { //for all neighbors
-      if ( (++votes[data[neighbor[j].idx].label]) > best_votation ) {
-        best_voted = data[neighbor[j].idx].label;
+      if ( (++votes[data[knn_list[j].idx].label]) > best_votation ) {
+        best_voted = data[knn_list[j].idx].label;
         best_votation = votes[best_voted];
       }
     }
@@ -200,7 +174,7 @@ int main() {
     printf("\n\nNEIGHBORS of x[%d]=(%d, %d):\n", k, x[k].x, x[k].y);
     printf("K \tIdx \tX \tY \tDist \t\tLabel\n");
     for (int j=0; j<K; j++)
-      printf("%d \t%d \t%d \t%d \t%d \t%d\n", j+1, neighbor[j].idx, data[neighbor[j].idx].x,  data[neighbor[j].idx].y, neighbor[j].dist,  data[neighbor[j].idx].label);
+      printf("%d \t%d \t%d \t%d \t%d \t%d\n", j+1, knn_list[j].idx, data[knn_list[j].idx].x, data[knn_list[j].idx].y, knn_list[j].dist,  data[knn_list[j].idx].label);
     
     printf("\n\nCLASSIFICATION of x[%d]:\n", k);
     printf("X \tY \tLabel\n");
@@ -209,7 +183,7 @@ int main() {
 #endif
 
   } //all test points classified
-
+knn_stop();
   //stop knn here
   //read current timer count, compute elapsed time
   elapsedu = timer_time_us(TIMER_BASE);

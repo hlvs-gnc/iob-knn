@@ -1,6 +1,7 @@
 #include "interconnect.h"
 #include "iob_knn.h"
 #include "KNNsw_reg.h"
+#include "printf.h"
 
 //base address
 static int base;
@@ -24,9 +25,26 @@ void knn_init( int base_address){
   knn_reset();
 }
 
-unsigned int knn_get_dist(int coordinates_x, int coordinates_y){
-
+void knn_set_testp(int coordinates_x){
+	
 	IO_SET(base, KNN_X, coordinates_x);
+	IO_SET(base, KNN_READY, 0);
+}
+
+void knn_set_datap(int coordinates_y){
+
 	IO_SET(base, KNN_Y, coordinates_y);
-	return IO_GET(base, KNN_DIST);
+
+}
+
+void knn_get_list(neighbor *knn_vector){
+	
+	IO_SET(base, KNN_READY, 1);	
+	for(int i = 0; i < K; i++){
+//		IO_SET(base, KNN_ID, i);
+		knn_vector[i].idx=IO_GET(base, KNN_INFO);
+
+	}
+	
+	knn_reset();
 }

@@ -13,16 +13,18 @@ module knn_core
     `INPUT(rst, 1),
     `INPUT(en, 1),
     `INPUT(valid, 1),
+    `INPUT(ready, 1),
     `INPUT(A, DATA_W),
     `INPUT(B, DATA_W),
-    `OUTPUT(knn_info, DATA_W)
+    `OUTPUT(knn_info, 2)
     );
 
     `SIGNAL(knn_dist, DATA_W)
     `SIGNAL(rst_dist, 1)
     `SIGNAL(en_dist, 1)
+    `SIGNAL(knn_id_out, DATA_W/4)
 
-   knn_dist dist0
+    knn_dist dist0
             (
               .clk(clk),
               .rst(rst),
@@ -34,24 +36,15 @@ module knn_core
 	      .B(B),
 	      .distance(knn_dist)
             );
-
-    genvar i;
-    
-    generate
-        for(i = 1; i < NBR_KNN; i = i + 1) begin
-    
-	    knn_list list
+         
+    knn_list list
             (
               .clk(clk),
               .rst(rst),
-              .en_list(valid),
-	      .prior_nn_dist(knn_dist_out[i*DATA_W-1:(i-1)*DATA_W]),
+  	      .valid(valid),
+	      .ID(knn_info),
               .dist_entry(knn_dist),
-	      .nn_dist(knn_dist_out[(i+1)*DATA_W-1:i*DATA_W])
-            );
-	
-	end
-    endgenerate
-
+	      .knn_info(knn_info)
+            );	
 
 endmodule

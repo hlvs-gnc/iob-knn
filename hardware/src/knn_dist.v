@@ -26,19 +26,18 @@ module knn_dist
 
    `SIGNAL(knn_dist_out, DATA_W*NBR_KNN)
 
-   integer n = 0;
-
-   `COMB if(n < NBR_TESTP*NBR_DATAP & en_dist) begin
+   `COMB begin
 
         dist_out_h = A[31:16]-B[31:16];
         dist_out_l = A[15:0]-B[15:0];
 
         dist_res = dist_out_h**2 + dist_out_l**2;
 
-        n = n + 1;
+	$display("dist_res: %d\n", dist_res);
 
     end
 
     `SIGNAL2OUT(distance, dist_res) //distance must go to the list block in order to collect the cluster of the K-neirest neighbours relative to the test point
+
 
 endmodule
