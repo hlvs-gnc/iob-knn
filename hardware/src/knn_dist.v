@@ -11,33 +11,45 @@ module knn_dist
    (
     `INPUT(clk, 1),
     `INPUT(rst, 1),
-    `INPUT(rst_dist, 1),
     `INPUT(en, 1),
     `INPUT(en_dist, 1),
     `INPUT(valid, 1),
     `INPUT(A, DATA_W),
     `INPUT(B, DATA_W),
-    `OUTPUT(distance, DATA_W)
+    `OUTPUT(en_list, 1),
+    `OUTPUT(distance, DATA_W),
+    `OUTPUT(id, DATA_W/4)
     );
 
-   `SIGNAL_SIGNED(dist_out_h, 16)
-   `SIGNAL_SIGNED(dist_out_l, 16)
-   `SIGNAL_SIGNED(dist_res, 32)
+   `SIGNAL_SIGNED(dist_h, 16)
+   `SIGNAL_SIGNED(dist_l, 16)
+   `SIGNAL(dist_h_pwr, 32)
+   `SIGNAL(dist_l_pwr, 32)
+   `SIGNAL(dist_res, 32)
+   
+   `SIGNAL(ok_signal, 1)
 
-   `SIGNAL(knn_dist_out, DATA_W*NBR_KNN)
+   integer i = 0;
 
-   `COMB begin
+   `SIGNAL2OUT(distance, dist_res) //distance must go to the list block in order to collect the cluster of the K-neirest neighbours relative to the test point
+   `SIGNAL2OUT(id, i)
+   `SIGNAL2OUT(en_list, ok_signal)
 
-        dist_out_h = A[31:16]-B[31:16];
-        dist_out_l = A[15:0]-B[15:0];
 
-        dist_res = dist_out_h**2 + dist_out_l**2;
+   `COMB if(en_dist) begin
+ok_signal=0;
+        dist_h = A[31:16]-B[31:16];
+        dist_l = A[15:0]-B[15:0];
+	
+	dist_h_pwr = dist_h * dist_h;
+	dist_l_pwr = dist_l * dist_l;
 
-	$display("dist_res: %d\n", dist_res);
+        dist_res = dist_h_pwr + dist_l_pwr;
 
+	i = i + 1;
+
+	if(i == 10) i = 0;
+ok_signal=1;
     end
-
-    `SIGNAL2OUT(distance, dist_res) //distance must go to the list block in order to collect the cluster of the K-neirest neighbours relative to the test point
-
 
 endmodule

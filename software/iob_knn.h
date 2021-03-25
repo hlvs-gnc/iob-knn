@@ -30,7 +30,7 @@ typedef struct datum {
 //neighbor info
 typedef struct neighbor {
   unsigned int idx; //index in dataset array
-//  unsigned int dist; //distance to test point
+  unsigned int dist; //distance to test point
 } neighbor;
 
 

@@ -101,8 +101,7 @@ int main() {
 
   //start knn here
   knn_init(KNN_BASE);
-  printf("Init KNN\n"); 
-  knn_start();
+//  printf("Init KNN\n"); 
 
   for (int k=0; k<M; k++) { //for all test points
   //compute distances to dataset points
@@ -114,8 +113,8 @@ int main() {
     knn_set_testp((x[k].x << 16) | (x[k].y & 0xFFFF));
 
     //init all k neighbors infinite distance
-  //  for (int j=0; j<K; j++)
-  //    knn_list[j].dist = INFINITE;
+    //for (int j=0; j<K; j++)
+    // knn_list[j].dist = INFINITE;
 
     //printf("Init k-neighbours distance\n");
 
@@ -124,30 +123,32 @@ int main() {
 #endif
     for (int i=0; i<N; i++) { //for all dataset points
       //compute distance to x[k]
-      // unsigned int d = sq_dist(x[k], data[i]);
-       
-      // unsigned int d = knn_get_dist((x[k].x << 16) | (x[k].y & 0xFFFF), (data[i].x << 16) | (data[i].y & 0xFFFF));
+      
+      //unsigned int d = sq_dist(x[k], data[i]);
+      //printf("%d\n", d); 
       knn_set_datap((data[i].x << 16) | (data[i].y & 0xFFFF));
       
+      /*      
       //insert in ordered list
-      /*for (int j=0; j<K; j++)
+      for (int j=0; j<K; j++)
         if ( d < knn_list[j].dist ) {
-          insert( (neighbor){i,d}, j);
+          insert((neighbor){i,d}, j);
           break;
         }
-      */
+      
 
 #ifdef DEBUG
       //dataset
       printf("%d \t%d \t%d \t%d \t%d\n", i, data[i].x, data[i].y, data[i].label, d);
 #endif
-
+*/
     }
-    knn_get_list(knn_list);
+    
+    knn_stop();
+     
+//    knn_get_list(knn_list);
 
-    //knn_stop();
     //printf("Distances check\n");
-
     
     //classify test point
 
@@ -164,7 +165,7 @@ int main() {
       }
     }
 
-    //printf("Voting check\n");
+   // printf("Voting check\n");
 
     x[k].label = best_voted;
 
@@ -181,9 +182,10 @@ int main() {
     printf("%d \t%d \t%d\n\n\n", x[k].x, x[k].y, x[k].label);
 
 #endif
-
+    
   } //all test points classified
-knn_stop();
+
+  
   //stop knn here
   //read current timer count, compute elapsed time
   elapsedu = timer_time_us(TIMER_BASE);
@@ -196,5 +198,3 @@ knn_stop();
   printf("\n");
   
 }
-
-

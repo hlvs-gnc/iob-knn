@@ -16,33 +16,34 @@ module knn_core
     `INPUT(ready, 1),
     `INPUT(A, DATA_W),
     `INPUT(B, DATA_W),
-    `OUTPUT(knn_info, 2)
+    `OUTPUT(knn_info, 8)
     );
 
     `SIGNAL(knn_dist, DATA_W)
-    `SIGNAL(rst_dist, 1)
-    `SIGNAL(en_dist, 1)
-    `SIGNAL(knn_id_out, DATA_W/4)
+    `SIGNAL(knn_id, DATA_W/4)
+    `SIGNAL(en_list, 1)
+
 
     knn_dist dist0
             (
               .clk(clk),
-              .rst(rst),
-              .rst_dist(rst_dist),
+              .rst(rst), 
               .en(en),
-	      .en_dist(en_dist),
+	      .en_dist(ready),
 	      .valid(valid),
 	      .A(A),
 	      .B(B),
-	      .distance(knn_dist)
+	      .en_list(en_list),
+	      .distance(knn_dist),
+	      .id(knn_id)
             );
-         
+ 
     knn_list list
             (
               .clk(clk),
               .rst(rst),
-  	      .valid(valid),
-	      .ID(knn_info),
+  	      .valid(en_list),
+	      .ID(knn_id),
               .dist_entry(knn_dist),
 	      .knn_info(knn_info)
             );	
