@@ -11,9 +11,9 @@ module knn_list
     `INPUT(clk, 1),
     `INPUT(rst, 1),
     `INPUT(valid, 1),
-    `INPUT(ID, 8),
+    `INPUT(datap_id, 8),
     `INPUT(dist_entry, DATA_W),
-    `OUTPUT(knn_info, 2)
+    `OUTPUT(knn_info, 8)
    );
 
     `SIGNAL(id_out, 8)
@@ -45,13 +45,13 @@ module knn_list
     end
 
 
-    `COUNTER_RE(clk, rst, valid, knn_counter)
+    //`COUNTER_RE(clk, rst, valid, knn_counter)
 
     `COMB if(valid) begin	
-	
-//	$display("counter: %d\n", knn_counter);	
-//      $display("ID: %d\n", ID); 
-//	$display("dist_entry: %d\n", dist_entry); 
+
+	//$display("counter: %d\n", knn_counter);	
+        $display("ID: %d\n", datap_id); 
+	$display("dist_entry: %d\n", dist_entry); 
 
 	for(i = 0; i < NBR_KNN; i = i + 1) begin 
 
@@ -59,19 +59,19 @@ module knn_list
 	
 		    	new_reg_val[knn_counter]=1;
 			dist_vec[knn_counter] = dist_entry;
-			id_vec[knn_counter] = ID;
+			id_vec[i] = datap_id;
 
-			$display("#################################");
-			$display("dist_vec[0]: %d\n", dist_vec[0]);
-               		$display("dist_vec[1]: %d\n", dist_vec[1]);
-        	        $display("dist_vec[2]: %d\n", dist_vec[2]);
-	                $display("dist_vec[3]: %d\n", dist_vec[3]);
+	//		$display("#################################");
+	//		$display("dist_vec[0]: %d\n", dist_vec[0]);
+        //     		$display("dist_vec[1]: %d\n", dist_vec[1]);
+        //	        $display("dist_vec[2]: %d\n", dist_vec[2]);
+	//              $display("dist_vec[3]: %d\n", dist_vec[3]);
 
-			$display("#################################");
-                        $display("id_vec[0]: %d\n", id_vec[0]);
-                        $display("id_vec[1]: %d\n", id_vec[1]);
-                        $display("id_vec[2]: %d\n", id_vec[2]);
-                        $display("id_vec[3]: %d\n", id_vec[3]);
+	//		$display("#################################");
+        //              $display("id_vec[0]: %d\n", id_vec[0]);
+        //              $display("id_vec[1]: %d\n", id_vec[1]);
+        //              $display("id_vec[2]: %d\n", id_vec[2]);
+        //              $display("id_vec[3]: %d\n", id_vec[3]);
 
     		//TODO: need to break from the verified condition
             end
@@ -83,5 +83,7 @@ module knn_list
 	end
     
     end
+
+	//TODO: output using multiplexer
 
 endmodule //knn_list

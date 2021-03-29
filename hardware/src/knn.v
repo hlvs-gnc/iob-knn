@@ -21,8 +21,7 @@ module knn_core
 
     `SIGNAL(knn_dist, DATA_W)
     `SIGNAL(knn_id, DATA_W/4)
-    `SIGNAL(en_list, 1)
-
+    `SIGNAL(ready_list, 1)
 
     knn_dist dist0
             (
@@ -33,19 +32,19 @@ module knn_core
 	      .valid(valid),
 	      .A(A),
 	      .B(B),
-	      .en_list(en_list),
+	      .en_list(ready_list),
 	      .distance(knn_dist),
 	      .id(knn_id)
             );
- 
+
     knn_list list
             (
               .clk(clk),
               .rst(rst),
-  	      .valid(en_list),
-	      .ID(knn_id),
+  	      .valid(ready_list),
+	      .datap_id(knn_id),
               .dist_entry(knn_dist),
 	      .knn_info(knn_info)
-            );	
+            );
 
 endmodule

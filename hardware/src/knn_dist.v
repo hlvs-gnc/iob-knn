@@ -30,26 +30,33 @@ module knn_dist
    `SIGNAL(ok_signal, 1)
 
    integer i = 0;
-
    `SIGNAL2OUT(distance, dist_res) //distance must go to the list block in order to collect the cluster of the K-neirest neighbours relative to the test point
-   `SIGNAL2OUT(id, i)
+   
    `SIGNAL2OUT(en_list, ok_signal)
+   `SIGNAL2OUT(id, i)
 
 
    `COMB if(en_dist) begin
-ok_signal=0;
-        dist_h = A[31:16]-B[31:16];
+	
+	ok_signal=1'b0;
+        
+	dist_h = A[31:16]-B[31:16];
         dist_l = A[15:0]-B[15:0];
 	
 	dist_h_pwr = dist_h * dist_h;
 	dist_l_pwr = dist_l * dist_l;
 
         dist_res = dist_h_pwr + dist_l_pwr;
+  ok_signal=1'b1;
 
 	i = i + 1;
-
+	
+	$display("dist_res: %d", dist_res);
+	$display("i: %d", i);
+	
 	if(i == 10) i = 0;
-ok_signal=1;
+	
+//	ok_signal=1'b1;
     end
 
 endmodule

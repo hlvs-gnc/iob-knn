@@ -39,10 +39,10 @@ module iob_knn
       .ready(KNN_READY),
       .A(KNN_X),
       .B(KNN_Y),
-      .knn_info(KNN_ID)
+      .knn_info(KNN_INFO)
       );
  
-   `SIGNAL(knn_id_out, 2)
+   `SIGNAL(knn_id_out, 8)
 
 
    //ready signal   

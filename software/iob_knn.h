@@ -5,7 +5,7 @@
 #define N 10  //data set size
 #define K 4   //number of neighbours (K)
 #define C 4   //number data classes
-#define M 4   //number samples to be classified
+#define M 1   //number samples to be classified
 /*#else
 #define S 12   
 #define N 100000
