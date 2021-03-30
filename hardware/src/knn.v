@@ -16,7 +16,6 @@ module knn_core
     `INPUT(ready, 1),
     `INPUT(A, DATA_W),
     `INPUT(B, DATA_W),
-    `INPUT(knn_get, 1),
     `INPUT(knn_id, 4),
     `OUTPUT(knn_info, 8)
     );
@@ -44,7 +43,6 @@ module knn_core
               .clk(clk),
               .rst(rst),
   	      .valid(ready_list),
-	      .get_id(knn_get),
 	      .datap_id(datap_id),
               .knn_id(knn_id),
 	      .dist_entry(knn_dist),

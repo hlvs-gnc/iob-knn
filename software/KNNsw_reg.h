@@ -8,4 +8,3 @@
 #define KNN_INFO 4
 #define KNN_ID 5
 #define KNN_READY 6
-#define KNN_GET 7

@@ -70,8 +70,7 @@ int main() {
     data[i].label = (unsigned char) (cmwc_rand()%C);
   }
   
-  //printf("Init dataset");
-
+  
 #ifdef DEBUG
   printf("\n\n\nDATASET\n");
   printf("Idx \tX \tY \tLabel\n");
@@ -86,8 +85,6 @@ int main() {
     //x[k].label will be calculated by the algorithm
   }
 
-  //printf("Init test points\n");
-
 #ifdef DEBUG
   printf("\n\nTEST POINTS\n");
   printf("Idx \tX \tY\n");
@@ -101,7 +98,6 @@ int main() {
 
   //start knn here
   knn_init(KNN_BASE);
-//  printf("Init KNN\n"); 
 
   for (int k=0; k<M; k++) { //for all test points
   //compute distances to dataset points
@@ -119,15 +115,13 @@ int main() {
      knn_list[j].dist = INFINITE;
     */
 
-    //printf("Init k-neighbours distance\n");
-
 #ifdef DEBUG
     printf("Datum \tX \tY \tLabel \tDistance\n");
 #endif
     for (int i=0; i<N; i++) { //for all dataset points
       //compute distance to x[k]
       
-      unsigned int d = sq_dist(x[k], data[i]); // 493us - 0 0 0 4
+   //   unsigned int d = sq_dist(x[k], data[i]); // 493us - 0 0 0 4
   
       //printf("%d\n", d); 
       knn_set_datap((data[i].x << 16) | (data[i].y & 0xFFFF));
@@ -148,12 +142,9 @@ int main() {
 
     }
     
-    //knn_stop();
+    knn_stop();
      
-    knn_get_list(knn_list); // 233us - 0 0 3 1
-
-    //printf("KNN IDs check\n");
-    
+    knn_get_list(knn_list); // 236us - 0 0 0 4    
     //classify test point
 
     //clear all votes
@@ -168,8 +159,6 @@ int main() {
         best_votation = votes[best_voted];
       }
     }
-
-   // printf("Voting check\n");
 
     x[k].label = best_voted;
 

@@ -9,7 +9,6 @@ static int base;
 void knn_reset() {
   IO_SET(base, KNN_RESET, 1);
   IO_SET(base, KNN_RESET, 0);
-  IO_SET(base, KNN_GET, 0); 
 }
 
 void knn_start() {
@@ -41,12 +40,10 @@ void knn_set_datap(int coordinates_y){
 
 void knn_get_list(neighbor *knn_vector){
 
-	IO_SET(base, KNN_GET, 1);	
 	for(int i = 0; i < K; i++){
 		IO_SET(base, KNN_ID, i);
 		knn_vector[i].idx=IO_GET(base, KNN_INFO);
-		//printf("knn_vector[%d].idx: %d\n", i, knn_vector[i].idx);
+	//	printf("knn_vector[%d].idx: %d\n", i, knn_vector[i].idx+1);
 	}
-
 	knn_reset();
 }
