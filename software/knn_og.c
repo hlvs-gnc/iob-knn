@@ -113,8 +113,11 @@ int main() {
     knn_set_testp((x[k].x << 16) | (x[k].y & 0xFFFF));
 
     //init all k neighbors infinite distance
-    //for (int j=0; j<K; j++)
-    // knn_list[j].dist = INFINITE;
+    
+    /*
+    for (int j=0; j<K; j++)
+     knn_list[j].dist = INFINITE;
+    */
 
     //printf("Init k-neighbours distance\n");
 
@@ -124,31 +127,32 @@ int main() {
     for (int i=0; i<N; i++) { //for all dataset points
       //compute distance to x[k]
       
-      //unsigned int d = sq_dist(x[k], data[i]);
+      unsigned int d = sq_dist(x[k], data[i]); // 493us - 0 0 0 4
+  
       //printf("%d\n", d); 
       knn_set_datap((data[i].x << 16) | (data[i].y & 0xFFFF));
-      
-      /*      
+            
       //insert in ordered list
+      /*
       for (int j=0; j<K; j++)
         if ( d < knn_list[j].dist ) {
           insert((neighbor){i,d}, j);
           break;
         }
-      
+      */
 
 #ifdef DEBUG
       //dataset
       printf("%d \t%d \t%d \t%d \t%d\n", i, data[i].x, data[i].y, data[i].label, d);
 #endif
-*/
+
     }
     
-    knn_stop();
+    //knn_stop();
      
-//    knn_get_list(knn_list);
+    knn_get_list(knn_list); // 233us - 0 0 3 1
 
-    //printf("Distances check\n");
+    //printf("KNN IDs check\n");
     
     //classify test point
 

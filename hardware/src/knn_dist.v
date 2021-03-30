@@ -47,16 +47,13 @@ module knn_dist
 	dist_l_pwr = dist_l * dist_l;
 
         dist_res = dist_h_pwr + dist_l_pwr;
-  ok_signal=1'b1;
+  	
+	ok_signal=1'b1;
 
 	i = i + 1;
+		
+	if(i == NBR_DATAP) i = 0;
 	
-	$display("dist_res: %d", dist_res);
-	$display("i: %d", i);
-	
-	if(i == 10) i = 0;
-	
-//	ok_signal=1'b1;
     end
 
 endmodule

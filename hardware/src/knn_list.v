@@ -11,7 +11,9 @@ module knn_list
     `INPUT(clk, 1),
     `INPUT(rst, 1),
     `INPUT(valid, 1),
+    `INPUT(get_id, 1),
     `INPUT(datap_id, 8),
+    `INPUT(knn_id, 4),
     `INPUT(dist_entry, DATA_W),
     `OUTPUT(knn_info, 8)
    );
@@ -22,19 +24,25 @@ module knn_list
 
     reg new_reg_val [0:NBR_KNN-1];
 
-    reg [DATA_W:0] dist_vec [0:NBR_KNN-1];
-    reg [DATA_W/4:0] id_vec [0:NBR_KNN-1];
+    reg [DATA_W-1:0] dist_vec [0:NBR_KNN-1];
+    reg [(DATA_W/4)-1:0] id_vec [0:NBR_KNN-1];
 
-    integer i;
+    integer i = 0;
     integer j;
     integer k;
+    integer n = 0;
 
     `SIGNAL2OUT(knn_info, id_out)
-  
+ 
+    reg [31:0] min_dist = 32'Hffffffff; 
+
+    integer id_min_dist=0;
+    integer id_max=0;
+
 
     always @(posedge clk) begin
   	for(j=0; j<NBR_KNN ; j=j+1) begin
-  		if (rst) dist_vec[j] <= 32'Hffffffff; 
+  		if (rst) dist_vec[j] <= 32'Hffffffff; // set maximum distance 
   	end
     end
 
@@ -45,45 +53,50 @@ module knn_list
     end
 
 
-    //`COUNTER_RE(clk, rst, valid, knn_counter)
-
-    `COMB if(valid) begin	
-
-	//$display("counter: %d\n", knn_counter);	
-        $display("ID: %d\n", datap_id); 
-	$display("dist_entry: %d\n", dist_entry); 
-
-	for(i = 0; i < NBR_KNN; i = i + 1) begin 
-
-	    if (dist_entry < dist_vec[knn_counter]) begin //compare distance value with the knn register	
+    always @(valid) begin	
+	        
+	//for(i = 0; i < NBR_KNN; i = i + 1) begin 
 	
-		    	new_reg_val[knn_counter]=1;
-			dist_vec[knn_counter] = dist_entry;
-			id_vec[i] = datap_id;
+/*	$display("dist_entry: %d", dist_entry);
+	$display("min_dist: %d", dist_vec[id_min_dist]);
+	$display("id_min_dist: %d", id_min_dist);
+*/
+	    if (dist_entry < dist_vec[id_min_dist]) begin // compare distance value with the knn register			
+			dist_vec[id_min_dist+1] = dist_vec[id_min_dist];
+			dist_vec[id_min_dist] = dist_entry;
+		
+			id_vec[id_min_dist+1] = id_vec[id_min_dist];	
+			id_vec[id_min_dist] = datap_id;
+	
+		//	id_min_dist = id_min_dist + 1;
+    		
+			//TODO: need to break from the verified condition
+            end else begin
+	        
+  // 			$display("ELSE! id_max_dist: %d", id_min_dist); 
 
-	//		$display("#################################");
-	//		$display("dist_vec[0]: %d\n", dist_vec[0]);
-        //     		$display("dist_vec[1]: %d\n", dist_vec[1]);
-        //	        $display("dist_vec[2]: %d\n", dist_vec[2]);
-	//              $display("dist_vec[3]: %d\n", dist_vec[3]);
-
-	//		$display("#################################");
-        //              $display("id_vec[0]: %d\n", id_vec[0]);
-        //              $display("id_vec[1]: %d\n", id_vec[1]);
-        //              $display("id_vec[2]: %d\n", id_vec[2]);
-        //              $display("id_vec[3]: %d\n", id_vec[3]);
-
-    		//TODO: need to break from the verified condition
-            end
-	    else begin
-	        	new_reg_val[knn_counter]=0;
-
+			id_min_dist = id_min_dist + 1;
 	    end
+             /*           $display("#################################");
+                        $display("dist_vec[0]: %d\n", dist_vec[0]);
+                        $display("dist_vec[1]: %d\n", dist_vec[1]);
+                        $display("dist_vec[2]: %d\n", dist_vec[2]);
+                        $display("dist_vec[3]: %d\n", dist_vec[3]);
 
-	end
-    
+                        $display("#################################");
+                        $display("id_vec[0]: %d\n", id_vec[0]);
+                        $display("id_vec[1]: %d\n", id_vec[1]);
+                        $display("id_vec[2]: %d\n", id_vec[2]);
+                        $display("id_vec[3]: %d\n", id_vec[3]);
+*/
+	//end
+
     end
 
-	//TODO: output using multiplexer
+    always @(*) begin
 
+ 	id_out = id_vec[knn_id];
+
+    end
+	//TODO: output
 endmodule //knn_list

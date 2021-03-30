@@ -39,6 +39,8 @@ module iob_knn
       .ready(KNN_READY),
       .A(KNN_X),
       .B(KNN_Y),
+      .knn_get(KNN_GET),
+      .knn_id(KNN_ID),
       .knn_info(KNN_INFO)
       );
  
