@@ -5,7 +5,7 @@
 module knn_list
    #(
     parameter DATA_W = 32,
-    parameter NBR_KNN = 4
+    parameter NBR_KNN = 10
     )
    (
     `INPUT(clk, 1),
@@ -48,7 +48,9 @@ module knn_list
 
 
     always @(valid) begin	
-	        
+	    
+	    //$display("dist_entry: %d", dist_entry);	        
+	    
 	    if (dist_entry < dist_vec[id_min_dist]) begin // compare distance value with the knn register			
 			dist_vec[id_min_dist+1] = dist_vec[id_min_dist];
 			dist_vec[id_min_dist] = dist_entry;
@@ -56,7 +58,7 @@ module knn_list
 			id_vec[id_min_dist+1] = id_vec[id_min_dist];	
 			id_vec[id_min_dist] = datap_id;
 	
-    	    
+    	   //TODO: propagate distance values to solve issues regarding a greater number of points 
 	    end else begin
 	    
 			id_min_dist = id_min_dist + 1;
@@ -69,7 +71,7 @@ module knn_list
     always @(*) begin
 
  	id_out = id_vec[knn_id];
-//	$display("id_out: %d", id_out+1);
+
     end
     
 endmodule //knn_list

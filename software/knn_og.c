@@ -40,14 +40,7 @@ int main() {
 
   unsigned long long elapsed;
   unsigned int elapsedu;
-
-  //init uart and timer
-  uart_init(UART_BASE, FREQ/BAUD);
-  //printf("\nInit timer\n");
-  //uart_txwait();
-
-  timer_init(TIMER_BASE);
-  
+    
   //read current timer count, compute elapsed time
   //elapsed  = timer_get_count();
   //elapsedu = timer_time_us();
@@ -97,23 +90,37 @@ int main() {
   //
 
   //start knn here
-  knn_init(KNN_BASE);
+  //
 
+  //init uart and timer
+  uart_init(UART_BASE, FREQ/BAUD);
+  uart_txwait();
+
+  //printf("\nInit timer\n");
+  timer_init(TIMER_BASE);
+ 
+  knn_init(KNN_BASE);
+  
+//  printf("\nKNN init\n");
+  
   for (int k=0; k<M; k++) { //for all test points
   //compute distances to dataset points
+    
+
 
 #ifdef DEBUG
     printf("\n\nProcessing x[%d]:\n", k);
 #endif
      
-    knn_set_testp((x[k].x << 16) | (x[k].y & 0xFFFF));
+    //knn_set_testp((x[k].x << 16) | (x[k].y & 0xFFFF));
 
     //init all k neighbors infinite distance
     
-    /*
+   
+
     for (int j=0; j<K; j++)
      knn_list[j].dist = INFINITE;
-    */
+    
 
 #ifdef DEBUG
     printf("Datum \tX \tY \tLabel \tDistance\n");
@@ -121,19 +128,18 @@ int main() {
     for (int i=0; i<N; i++) { //for all dataset points
       //compute distance to x[k]
       
-   //   unsigned int d = sq_dist(x[k], data[i]); // 493us - 0 0 0 4
-  
-      //printf("%d\n", d); 
-      knn_set_datap((data[i].x << 16) | (data[i].y & 0xFFFF));
+      unsigned int d = sq_dist(x[k], data[i]); // 316us - 0 0 0 4
+     
+     // knn_set_datap((data[i].x << 16) | (data[i].y & 0xFFFF));
             
       //insert in ordered list
-      /*
+      
       for (int j=0; j<K; j++)
         if ( d < knn_list[j].dist ) {
           insert((neighbor){i,d}, j);
           break;
         }
-      */
+      
 
 #ifdef DEBUG
       //dataset
@@ -142,9 +148,9 @@ int main() {
 
     }
     
-    knn_stop();
+    //knn_stop();
      
-    knn_get_list(knn_list); // 236us - 0 0 0 4    
+    //knn_get_list(knn_list); // 61us - 0 0 0 4    
     //classify test point
 
     //clear all votes

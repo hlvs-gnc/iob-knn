@@ -4,9 +4,9 @@
 module knn_dist
    #(
      parameter DATA_W = 32,
-     parameter NBR_KNN = 4,
-     parameter NBR_TESTP = 4,
-     parameter NBR_DATAP = 10
+     parameter NBR_KNN = 10,
+     parameter NBR_TESTP = 5,
+     parameter NBR_DATAP = 50
    )
    (
     `INPUT(clk, 1),

@@ -43,7 +43,7 @@ void knn_get_list(neighbor *knn_vector){
 	for(int i = 0; i < K; i++){
 		IO_SET(base, KNN_ID, i);
 		knn_vector[i].idx=IO_GET(base, KNN_INFO);
-	//	printf("knn_vector[%d].idx: %d\n", i, knn_vector[i].idx+1);
+		printf("knn_vector[%d].idx: %d\n", i, knn_vector[i].idx+1);
 	}
 	knn_reset();
 }
